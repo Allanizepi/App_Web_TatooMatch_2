@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>IA Sugere - TatooMatch</title>
+    <style>
+        body { font-family: sans-serif; background: #111; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        form { background: #222; padding: 40px; border-radius: 15px; width: 400px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        h2 { color: #d4af37; text-align: center; }
+        label { display: block; margin-top: 15px; font-size: 0.9em; color: #aaa; }
+        select, input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: none; }
+        button { width: 100%; margin-top: 25px; padding: 15px; background: #d4af37; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <form action="/predict" method="POST">
+        <h2>Descubra sua Tattoo Ideal</h2>
+        <label>Gênero</label>
+        <select name="genero">
+            <option value="M">Masculino</option>
+            <option value="F">Feminino</option>
+        </select>
+        <label>Idade</label>
+        <input type="number" name="idade" required min="18" max="100">
+        <label>Profissão</label>
+        <select name="profissao">
+            <option value="TI">Tecnologia/TI</option>
+            <option value="Saude">Saúde</option>
+            <option value="Artes">Artes/Design</option>
+            <option value="Executivo">Negócios/Executivo</option>
+        </select>
+        <label>Estilo Musical</label>
+        <select name="estilo_musical">
+            <option value="Rock">Rock/Metal</option>
+            <option value="Pop">Pop/Indie</option>
+            <option value="Sertanejo">Sertanejo/MPB</option>
+        </select>
+        <label>Hobby Principal</label>
+        <select name="hobby">
+            <option value="Games">Games</option>
+            <option value="Viagem">Viagens/Natureza</option>
+            <option value="Academia">Esportes/Academia</option>
+        </select>
+        <button type="submit">ANALISAR MEU PERFIL</button>
+    </form>
+</body>
+</html>

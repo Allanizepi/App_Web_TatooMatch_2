@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Sua Sugestão - TatooMatch</title>
+    <style>
+        body { font-family: sans-serif; background: #111; color: white; text-align: center; padding: 50px; }
+        .result-card { background: #222; padding: 30px; border-radius: 20px; display: inline-block; border: 2px solid #d4af37; }
+        img { width: 300px; border-radius: 10px; margin-top: 20px; }
+        .back { margin-top: 30px; display: block; color: #d4af37; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>A IA analisou seu perfil!</h1>
+    <div class="result-card">
+        <h3>Sugerimos o estilo: <span style="color: #d4af37;">{{ categoria }}</span></h3>
+        <p>Baseado nos seus gostos, você combina com:</p>
+        <img src="/static/tattoos/{{ tattoo.file }}" alt="{{ tattoo.label }}">
+        <h4>{{ tattoo.label }}</h4>
+    </div>
+    <a href="/" class="back">← Voltar ao Catálogo Completo</a>
+</body>
+</html>

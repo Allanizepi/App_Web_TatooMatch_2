@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TatooMatch - Catálogo de Tatuagens</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+        scroll-behavior: smooth;
+      }
+
+      header {
+        background-color: #111;
+        color: #fff;
+        text-align: center;
+        padding: 40px 10px;
+      }
+
+      nav {
+        background: #222;
+        padding: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      }
+
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: bold;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        transition: color 0.3s;
+      }
+
+      nav a:hover {
+        color: #d4af37; /* Dourado */
+      }
+
+      .category-title {
+        text-align: center;
+        margin-top: 60px;
+        color: #222;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        position: relative;
+      }
+
+      .category-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: #d4af37;
+        margin: 10px auto;
+      }
+
+      .grid {
+        display: grid;
+        /* Cria colunas automáticas com no mínimo 280px */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        padding: 20px 40px 60px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .card {
+        /* Removemos a largura fixa para o grid-template-columns trabalhar */
+        background-color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: scale(1.03); /* Leve zoom ao passar o mouse */
+        box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+      }
+
+      .card img {
+        width: 100%;
+        /* Altura aumentada para dar mais destaque aos detalhes */
+        height: 350px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .card .label {
+        padding: 15px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1em;
+        color: #111;
+        background: #fff;
+      }
+
+      /* Estilos do Modal  */
+      .modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        background: rgba(0,0,0,0.85);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        width: 350px;
+        max-width: 90%;
+        position: relative;
+      }
+
+      .close { position: absolute; top: 10px; right: 15px; font-size: 1.5em; cursor: pointer; }
+      label { display: block; margin-top: 15px; font-weight: 500; }
+      input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+      button { margin-top: 20px; padding: 12px; width: 100%; background-color: #111; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+      button:hover { background-color: #444; }
+      #status { margin-top: 15px; text-align: center; font-weight: bold; }
+    </style>
+  </head>
+  <div style="text-align: center; padding: 20px; background: #eee;">
+    <a href="/sugestao" class="btn-sugestao">✨ Tatto Match Sugere</a>
+</div>
+
+<style>
+    .btn-sugestao {
+        display: inline-block;
+        padding: 15px 30px;
+        background: #d4af37;
+        color: #000;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 50px;
+        font-size: 1.2em;
+        transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(212,175,55,0.4);
+    }
+    .btn-sugestao:hover { transform: scale(1.1); background: #b8962d; }
+</style>
+
+  <body>
+
+    <header>
+      <h1>TatooMatch</h1>
+      <p>Escolha o estilo que combina com você</p>
+    </header>
+
+    <nav>
+      {% for categoria in categorias.keys() %}
+        <a href="#{{ categoria }}">{{ categoria }}</a>
+      {% endfor %}
+    </nav>
+
+    {% for categoria, tatuagens in categorias.items() %}
+      <section id="{{ categoria }}">
+        <h2 class="category-title">{{ categoria }}</h2>
+        <div class="grid">
+          {% for t in tatuagens %}
+            <div class="card" data-label="{{ t.label }}">
+              <img src="/static/tattoos/{{ t.file }}" alt="{{ t.label }}">
+              <div class="label">{{ t.label }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span id="close" class="close">×</span>
+        <h3 id="chosen">Tatuagem</h3>
+        <form id="requestForm">
+          <input type="hidden" name="tattoo" id="tattooInput">
+          <label>Seu Nome <input type="text" name="name" required></label>
+          <label>E-mail <input type="email" name="email" required></label>
+          <label>WhatsApp <input type="text" name="phone" placeholder="(00) 00000-0000"></label>
+          <button type="submit">Solicitar Orçamento</button>
+        </form>
+        <div id="status"></div>
+      </div>
+    </div>
+
+    <script>
+      const cards = document.querySelectorAll('.card');
+      const modal = document.getElementById('modal');
+      const closeBtn = document.getElementById('close');
+      const chosenText = document.getElementById('chosen');
+      const tattooInput = document.getElementById('tattooInput');
+      const form = document.getElementById('requestForm');
+      const status = document.getElementById('status');
+
+      // Abrir modal ao clicar no card
+      cards.forEach(c => c.addEventListener('click', () => {
+        const label = c.dataset.label;
+        tattooInput.value = label;
+        chosenText.textContent = label;
+        status.textContent = '';
+        modal.style.display = 'flex';
+      }));
+
+      // Fechar modal
+      closeBtn.onclick = () => modal.style.display = 'none';
+      window.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; }
+
+      // Envio do formulário via Fetch
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        status.style.color = '#333';
+        status.textContent = 'Enviando seu pedido...';
+
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+
+        try {
+          const resp = await fetch('/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (resp.ok) {
+            status.style.color = 'green';
+            status.textContent = 'Pedido registrado! Entraremos em contato.';
+            form.reset();
+            setTimeout(() => modal.style.display = 'none', 2000);
+          } else {
+            status.style.color = 'red';
+            status.textContent = 'Erro ao enviar. Tente novamente.';
+          }
+        } catch (err) {
+          status.style.color = 'red';
+          status.textContent = 'Erro de conexão com o servidor.';
+        }
+      });
+    </script>
+  </body>
+</html>

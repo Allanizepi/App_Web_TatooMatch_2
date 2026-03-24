@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard Pro</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: #eee; padding: 20px; }
+        .btn { padding: 8px 15px; border-radius: 5px; cursor: pointer; text-decoration: none; border: none; font-size: 0.9em; }
+        .btn-export { background: #28a745; color: white; margin-bottom: 20px; display: inline-block; }
+        .btn-delete { background: #dc3545; color: white; }
+        table { width: 100%; border-collapse: collapse; background: #1e1e1e; }
+        th, td { padding: 15px; border-bottom: 1px solid #333; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Gerenciamento de Pedidos</h1>
+    <a href="/export" class="btn btn-export">📥 Exportar para Excel</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Tatuagem</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pedidos %}
+            <tr id="row-{{p.id}}">
+                <td>{{ p.created_at.strftime('%d/%m %H:%M') }}</td>
+                <td>{{ p.name }}<br><small>{{ p.email }}</small></td>
+                <td>{{ p.tattoo }}</td>
+                <td>
+                    <button onclick="deletePedido({{p.id}})" class="btn btn-delete">Excluir</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        async function deletePedido(id) {
+            if(!confirm("Deseja excluir este pedido?")) return;
+            const resp = await fetch(`/delete/${id}`, { method: 'POST' });
+            if(resp.ok) document.getElementById(`row-${id}`).remove();
+        }
+    </script>
+</body>
+</html>
